@@ -2,7 +2,7 @@
 import dotenv from "dotenv"
 import connectDB from "./db/index.js";
 import { app } from "./app.js";
-import foodRouter from "./routes/food.route.js";
+import foodRouter from "./routes/foodItem.route.js";
 dotenv.config({path:"./env"})
 
 connectDB()
@@ -17,7 +17,7 @@ connectDB()
 })
 
 
-app.use("/api/food",foodRouter)
+app.use("/api/foodItem",foodRouter)
 
 
 

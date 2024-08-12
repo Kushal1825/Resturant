@@ -33,7 +33,40 @@ const addFood = assyncHandler(async (req,res)=>{
 
 })
 
+const listFoods =assyncHandler(async (req,res)=>{
+    try {
+        const response = await FoodItem.find({})
+        if(!response){
+            throw new ApiError(400,"NO data found")
+        }
+        return res
+        .status(200)
+        .json(new ApiResonse(200,response,"Food item fetch successfully"))
+    } catch (error) {
+        throw new ApiError(400,"NO data found")
+    }
+})
+
+const DeleteFoodItem = assyncHandler(async(req,res)=>{
+    try {
+        const food = await FoodItem.findById(req.body.id);
+        console.log(food);
+        
+        if(!food){
+            throw new ApiError(404,"Food is not awailable")
+        }
+        await FoodItem.findByIdAndDelete(req.body.id);
+        
+        res
+        .status(200)
+        .json({
+            success:true,
+            message:"Food item deleted Succesfully"
+        })
+    } catch (error) {
+        res.json({success:false,message:"Error"})
+    }
+})
 
 
-
-export {addFood}
+export {addFood,listFoods,DeleteFoodItem}
