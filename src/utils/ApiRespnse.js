@@ -10,3 +10,5 @@ class ApiResonse {
         this.success = statusCode < 400
     }
 }
+
+export default ApiResonse

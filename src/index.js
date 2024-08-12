@@ -2,6 +2,7 @@
 import dotenv from "dotenv"
 import connectDB from "./db/index.js";
 import { app } from "./app.js";
+import foodRouter from "./routes/food.route.js";
 dotenv.config({path:"./env"})
 
 connectDB()
@@ -15,6 +16,8 @@ connectDB()
     console.log("MONGODB db connection Failed !! ", err);
 })
 
+
+app.use("/api/food",foodRouter)
 
 
 
