@@ -9,8 +9,8 @@ const foodRouter = express.Router();
 
 // Image storage Engine
 
-foodRouter.post("/add",upload.single("image"),addFood)
-foodRouter.get('/list',listFoods)
-foodRouter.post('/delete',DeleteFoodItem)
+foodRouter.route("/add").post(upload.single("image"),addFood)
+foodRouter.route("/list").get(listFoods)
+foodRouter.route('/delete').post(DeleteFoodItem)
 
 export default foodRouter;
