@@ -19,7 +19,7 @@ const foodItemSchema = new Schema({
     },
     category: {
         type: String,
-        enum: ['appetizer', 'main_course', 'dessert', 'beverage'], // or custom categories
+        enum: ['starter', 'main_course', 'dessert', 'beverage'], // or custom categories
         required:true,
     },
     isAvailable: {

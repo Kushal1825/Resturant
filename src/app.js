@@ -9,6 +9,7 @@ app.use(cors({
     credentials:true,
 }))
 
+
 app.use(express.json({limit:'100kb'})) // data send by json file 
 
 app.use(express.urlencoded({extended:true,limit:"16kb"})) // data send by url middleware

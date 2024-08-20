@@ -27,9 +27,12 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['customer','staff',"admin","cook"],
+        enum: ['customer','staff',"admin"],
         default: 'customer'
     },
+    token:{
+        type:String
+    }
 },{timestamps:true});
 
 userSchema.pre("save", async function (next) {

@@ -3,6 +3,8 @@ import {assyncHandler} from '../utils/asyncHandler.js';
 import ApiResonse from "../utils/ApiRespnse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiError } from "../utils/ApiError.js";
+import jwt from "jsonwebtoken";
+
 
 const RegisterUser = assyncHandler(async(req,res)=>{
     const {email,username,password}=req.body
@@ -23,6 +25,15 @@ const RegisterUser = assyncHandler(async(req,res)=>{
         email,
         password,
     })
+    
+    const token = jwt.sign(
+        {_id:user._id,email},
+        process.env.JWT_SECRET,
+        {expiresIn:"2d"}
+    )
+    user.token = token;
+    await user.save();
+   
     const createdUser = await User.findById(user._id).select(
         "-password"
     );
@@ -34,6 +45,78 @@ const RegisterUser = assyncHandler(async(req,res)=>{
     .json(new ApiResonse(200,createdUser,"user registered successfully"))
 })
 
+const loginUser = assyncHandler(async(req,res)=>{
+    try {
+        const {email,password} = req.body
+        if(!(email && password)){
+            res.status(400)
+            .json(new ApiError(400,"Please enter the data"))
+        }
+        const user = await User.findOne({email})
+        if(!user){
+            res.status(400)
+            .json(new ApiError(400,"Please register first"))
+        }
+        if(user && ( await user.isPasswordCorrect(password) )){
+
+            const token = jwt.sign(
+                {_id:user._id},
+                process.env.JWT_SECRET,
+                {expiresIn:"2d"}
+            );
+
+            user.token = token
+            user.password=""
+            //send token in cookie parser
+            
+            const options = {
+                expires:new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+                httpOnly:true,
+                // secure:true,
+
+            }
+
+            res.status(200)
+            .cookie("restaurantAccessToken",token,options)
+            .json(new ApiResonse(200,{user:user,token}))
+        }
+    } catch (error) {
+        console.log(error);
+        
+    }
+})
+
+const logoutUser = assyncHandler(async(req,res)=>{
+    try {
+        console.log("Hello here");
+        
+        await User.findByIdAndUpdate(req.user._id,
+            {
+              $set : {
+                token : ""
+              },
+              
+            },
+            {
+              new:true
+            }
+            )
+        const options = {
+            expires:new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+            httpOnly:true
+        }
+        // console.log("hello here");
+        
+    return res
+    .status(200)
+    .clearCookie("restaurantAccessToken",options)
+    .json(new ApiResonse(200,{},"User loggedout"))
+    
+    } catch (error) {
+        console.log(error.message);
+        
+    }
+})
 
 const listUser = assyncHandler(async(req,res)=>{
     const userlist = await User.find({}).select("-password")
@@ -43,9 +126,4 @@ const listUser = assyncHandler(async(req,res)=>{
     
 })
 
-
-
-
-
-
-export {RegisterUser,listUser}
+export {RegisterUser,listUser,loginUser,logoutUser}

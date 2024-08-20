@@ -1,7 +1,7 @@
 import { FoodItem } from "../models/foodItem.model.js";
 
 import {assyncHandler} from '../utils/asyncHandler.js';
-import ApiResonse from "../utils/ApiRespnse.js";
+import ApiResponse from "../utils/ApiRespnse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiError } from "../utils/ApiError.js";
 
@@ -41,7 +41,7 @@ const listFoods =assyncHandler(async (req,res)=>{
         }
         return res
         .status(200)
-        .json(new ApiResonse(200,response,"Food item fetch successfully"))
+        .json(new ApiResponse(200,response,"Food item fetch successfully"))
     } catch (error) {
         throw new ApiError(400,"NO data found")
     }
@@ -50,7 +50,7 @@ const listFoods =assyncHandler(async (req,res)=>{
 const DeleteFoodItem = assyncHandler(async(req,res)=>{
     try {
         const food = await FoodItem.findById(req.body.id);
-        console.log(food);
+
         
         if(!food){
             throw new ApiError(404,"Food is not awailable")
@@ -68,5 +68,55 @@ const DeleteFoodItem = assyncHandler(async(req,res)=>{
     }
 })
 
+const updateFoodItem = assyncHandler(async(req,res)=>{
+     console.log(req.body);
+     
+    await FoodItem.findByIdAndUpdate(req.body._id,
+        {
+          $set : {
+            name:req.body.name,
+            price:req.body.price,
+            category:req.body.category,
+            description:req.body.description
+          },
+          
+        },
+        {
+          new:true
+        }
+    )
+    try {
+        res.status(200)
+        .json(new ApiResponse(200,{},"Data updated successfully"))
+    } catch (error) {
+        console.log(error)
+        res.json({success:false,message:"Error"});
+    }
+})
 
-export {addFood,listFoods,DeleteFoodItem}
+const getSingleFoodItem = assyncHandler(async(req,res)=>{
+    try {
+        const food = await FoodItem.findById(req.body.id);
+        
+        if(!food){
+            throw new ApiError(404,"Food is not awailable")
+        }
+        
+        res
+        .status(200)
+        .json(
+            new ApiResponse(200,food)
+        )
+    } catch (error) {
+        res.json({success:false,message:"Error"})
+    }
+})
+
+
+export {
+    addFood,
+    listFoods,
+    DeleteFoodItem,
+    getSingleFoodItem,
+    updateFoodItem
+    }
