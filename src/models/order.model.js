@@ -17,12 +17,8 @@ const orderSchema = new Schema ({
     },
     status:{
         type:String,
-        enum:['Pending','confirmed','ready','served'],
-        default:'pending'
-    },
-    tableNumber:{
-        type:Number,
-        required:true,
+        enum:['Pending','Confirmed','Ready','Served'],
+        default:'Pending'
     }
 },{timestamps:true})
 

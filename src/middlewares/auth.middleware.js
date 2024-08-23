@@ -7,16 +7,16 @@ export const verifyJWT = assyncHandler(
     async(req,res,next)=>{
        try {
          const token = req.cookies?.restaurantAccessToken || req.header("Authorization")?.replace("Bearer ","")
-         console.log(token);
+        //  console.log(token);
          
          if(!token){
              throw new ApiError(401,"Unauthorized requrest")
          }
          const decodedToken =jwt.verify(token,process.env.JWT_SECRET)
-         console.log(decodedToken);
+        //  console.log(decodedToken);
          
          const user = await User.findById(decodedToken._id).select("-password -token")
-         console.log(user);
+        //  console.log(user);
          
          if(!user){
              throw new ApiError(401,"Invalid Access Token");

@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt'
 const userSchema = new mongoose.Schema({
     avtar:{
         type:String,
+        default: ""
     },
     username: {
         type: String,
@@ -24,6 +25,10 @@ const userSchema = new mongoose.Schema({
     },
     phone: {
         type: String
+    },
+    Address:{
+        type:String,
+        default:""
     },
     role: {
         type: String,

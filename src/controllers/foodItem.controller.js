@@ -30,7 +30,6 @@ const addFood = assyncHandler(async (req,res)=>{
         console.log(error)
         res.json({success:false,message:"Error"});
     }
-
 })
 
 const listFoods =assyncHandler(async (req,res)=>{

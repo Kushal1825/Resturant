@@ -4,6 +4,7 @@ import connectDB from "./db/index.js";
 import { app } from "./app.js";
 import foodRouter from "./routes/foodItem.route.js";
 import user from "./routes/user.route.js";
+import order from "./routes/order.route.js";
 dotenv.config({path:"./env"})
 
 connectDB()
@@ -21,6 +22,10 @@ connectDB()
 app.use("/api/foodItem",foodRouter)
 
 app.use('/api/user',user)
+
+app.use('/api/order',order)
+
+
 
 
 

@@ -126,4 +126,24 @@ const listUser = assyncHandler(async(req,res)=>{
     
 })
 
-export {RegisterUser,listUser,loginUser,logoutUser}
+const removeUser= assyncHandler(async (req,res)=>{
+    try {
+        const user = await User.findById(req.body.id);
+
+        if(!user){
+            throw new ApiError(404,"User is not awailable")
+        }
+        await User.findByIdAndDelete(req.body.id);
+        
+        res
+        .status(200)
+        .json({
+            success:true,
+            message:"user deleted Succesfully"
+        })
+    } catch (error) {
+        res.json({success:false,message:"Error"})
+    }
+})
+
+export {RegisterUser,listUser,loginUser,logoutUser,removeUser}
