@@ -1,5 +1,5 @@
 import { FoodItem } from "../models/foodItem.model.js";
-
+import { OrderItem } from "../models/orderItem.model.js";
 import {assyncHandler} from '../utils/asyncHandler.js';
 import ApiResponse from "../utils/ApiRespnse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
@@ -112,10 +112,62 @@ const getSingleFoodItem = assyncHandler(async(req,res)=>{
 })
 
 
+const popularDishes = assyncHandler( async (req,res)=>{
+
+    try {
+        const data = await OrderItem.aggregate([
+  
+            {
+              $group: {
+                _id: "$foodItem",
+                quantity:{
+                  $sum:"$quantity"
+                }
+              }
+            },
+            {
+              $sort: {
+                "quantity": -1
+              }
+            },
+            {
+              $lookup: {
+                from: "fooditems",
+                localField: "_id",
+                foreignField: "_id",
+                as: "foodItem"
+              }
+            },
+            {
+              $addFields: {
+                foodItem:{
+                  $first:"$foodItem"
+                }
+              }
+            },
+            {
+              $limit: 4
+            }
+            
+          ])
+
+          
+            res.status(200)
+            .json(new ApiResponse(200,data,"Data fetched successfully"))
+          
+    } catch (error) {
+        console.log(error);
+        
+    }
+
+});
+
+
 export {
     addFood,
     listFoods,
     DeleteFoodItem,
     getSingleFoodItem,
-    updateFoodItem
+    updateFoodItem,
+    popularDishes
     }

@@ -72,7 +72,7 @@ const loginUser = assyncHandler(async(req,res)=>{
             const options = {
                 expires:new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
                 httpOnly:true,
-                // secure:true,
+                secure:true,
 
             }
 
@@ -103,7 +103,8 @@ const logoutUser = assyncHandler(async(req,res)=>{
             )
         const options = {
             expires:new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-            httpOnly:true
+            httpOnly:true,
+            secure:true,
         }
         // console.log("hello here");
         
@@ -146,4 +147,11 @@ const removeUser= assyncHandler(async (req,res)=>{
     }
 })
 
-export {RegisterUser,listUser,loginUser,logoutUser,removeUser}
+const FetchUser = assyncHandler(async(req,res)=>{
+    const user = req.user;
+    res.status(200);
+    res.json(new ApiResonse(200,user,"Data fetched Successfully"))
+    
+})
+
+export {RegisterUser,listUser,loginUser,logoutUser,removeUser,FetchUser}
