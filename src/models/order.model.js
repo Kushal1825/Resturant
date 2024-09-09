@@ -19,6 +19,10 @@ const orderSchema = new Schema ({
         type:String,
         enum:['Pending','Confirmed','Cancel','Delivered'],
         default:'Pending'
+    },
+    payment:{
+        type:Boolean,
+        default:false
     }
 },{timestamps:true})
 

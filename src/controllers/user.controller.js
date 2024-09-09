@@ -7,15 +7,15 @@ import jwt from "jsonwebtoken";
 
 
 const RegisterUser = assyncHandler(async(req,res)=>{
-    const {email,username,password}=req.body
+    const {email,username,password,phone,Address}=req.body
     if(
-        [email,username,password].some((field)=>field.trim() == "")
+        [email,username,password,phone,Address].some((field)=>field.trim() == "")
     ){
         throw new ApiError(400,"All field are compolsory")
     }
     
     const existedUser = await User.findOne({email})
-    console.log(existedUser)
+    
     if(existedUser){
         throw new ApiError(409,"User already Exist");
     }
@@ -24,6 +24,8 @@ const RegisterUser = assyncHandler(async(req,res)=>{
         username,
         email,
         password,
+        phone,
+        Address
     })
     
     const token = jwt.sign(
