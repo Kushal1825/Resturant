@@ -38,6 +38,8 @@ const listFoods =assyncHandler(async (req,res)=>{
         if(!response){
             throw new ApiError(400,"NO data found")
         }
+        
+        
         return res
         .status(200)
         .json(new ApiResponse(200,response,"Food item fetch successfully"))
