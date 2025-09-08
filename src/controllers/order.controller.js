@@ -376,8 +376,12 @@ const pandingOrders = assyncHandler(async(req,res)=>{
       $count: 'orders'
     }
   ]);
+  // If no match, return 0
+const count = orders.length > 0 ? orders[0].orders : 0;
+orders.orders=count
+
   res.status(200)
-  .json(new ApiResonse(200,orders,"Total Number of last month order"))
+  .json(new ApiResonse(200,{ orders: count },"Total Number of last month order"))
 })
 
 const OrderDetail = assyncHandler(async (req,res) => {
